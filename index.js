@@ -3,7 +3,7 @@
  * @Date: 2022-11-11 21:11:42
  * @Description:
  * @LastEditors: yeenjian
- * @LastEditTime: 2025-06-10 14:36:47
+ * @LastEditTime: 2025-06-10 15:21:13
  * @site: book.palxp.com
  */
 const fs = require('fs')
@@ -35,8 +35,9 @@ fs.readdir(basePath, async function (err, files) {
         // images(filedir).save(path.resolve(`view/public/${filename}`))
         // 生成压缩图
         images(filedir)
+          .setLimit(1000000, 1000000)
           .size(thumbSize)
-          .save(path.resolve(`view/public/thumb-${filename}`), { quality: 75 })
+          .save(path.resolve(`view/public/thumb-${filename}`), { quality: 30 })
       } catch (error) {
         console.log(error)
       }
