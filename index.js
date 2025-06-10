@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2022-11-11 21:11:42
  * @Description:
- * @LastEditors: ShawnPhang
- * @LastEditTime: 2022-11-28 07:57:41
+ * @LastEditors: yeenjian
+ * @LastEditTime: 2025-06-10 14:36:47
  * @site: book.palxp.com
  */
 const fs = require('fs')
@@ -37,9 +37,15 @@ fs.readdir(basePath, async function (err, files) {
         images(filedir)
           .size(thumbSize)
           .save(path.resolve(`view/public/thumb-${filename}`), { quality: 75 })
-      } catch (error) {}
+      } catch (error) {
+        console.log(error)
+      }
       // 处理json数据
-      let dimensions = { url: filename, datetime: dayjs(stats.birthtime).format('YYYY-MM-DD hh:mm:ss'), thumb: 'thumb-' + filename }
+      let dimensions = {
+        url: filename,
+        datetime: dayjs(stats.birthtime).format('YYYY-MM-DD hh:mm:ss'),
+        thumb: 'thumb-' + filename
+      }
       try {
         dimensions = { ...dimensions, ...(await exifGetInfo(filename)) }
       } catch (error) {}
@@ -55,7 +61,12 @@ fs.readdir(basePath, async function (err, files) {
       } catch (error) {}
       if (dimensions.width) {
         const color = await getColor(filename)
-        picsData.push({ ...dimensions, ...getDate(dimensions.datetime), color: rgbToHex(color), size: calculateSize(stats.size / 1024) })
+        picsData.push({
+          ...dimensions,
+          ...getDate(dimensions.datetime),
+          color: rgbToHex(color),
+          size: calculateSize(stats.size / 1024)
+        })
       }
     }
   }
@@ -76,7 +87,8 @@ function exifGetInfo(filename) {
         let datetime = exifData.exif.DateTimeOriginal || ModifyDate
         width && (result.width = width)
         height && (result.height = height)
-        datetime && (result.datetime = datetime.split(' ')[0].replace(/:/g, '-') + ' ' + datetime.split(' ')[1].slice(0, 8))
+        datetime &&
+          (result.datetime = datetime.split(' ')[0].replace(/:/g, '-') + ' ' + datetime.split(' ')[1].slice(0, 8))
         if (exifData.image && exifData.exif) {
           result.exif = await getExif({ ...exifData.image, ...exifData.exif })
         }
@@ -92,7 +104,13 @@ function exifGetInfo(filename) {
 // 获取日期详情
 function getDate(datetime) {
   const day = dayjs(datetime)
-  return { stamp: day.unix(), year: day.format('YYYY'), month: day.format('YYYY-MM'), date: day.format('YYYY-MM-DD'), dateStr: day.format('YYYY年MM月DD日') }
+  return {
+    stamp: day.unix(),
+    year: day.format('YYYY'),
+    month: day.format('YYYY-MM'),
+    date: day.format('YYYY-MM-DD'),
+    dateStr: day.format('YYYY年MM月DD日')
+  }
 }
 
 // 获取图片主颜色
