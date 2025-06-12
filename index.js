@@ -3,7 +3,7 @@
  * @Date: 2022-11-11 21:11:42
  * @Description:
  * @LastEditors: yeenjian
- * @LastEditTime: 2025-06-12 09:35:43
+ * @LastEditTime: 2025-06-12 11:12:46
  * @site: book.palxp.com
  */
 const fs = require('fs')
@@ -17,6 +17,7 @@ const ColorThief = require('colorthief')
 const { Jimp } = require('jimp')
 
 const basePath = path.resolve('resources')
+// const basePath = path.resolve('testResources')
 const jsonPath = path.resolve('view/src/assets/data/datalist.json')
 const { thumbSize, isPrivacy } = require('./config.json')
 const picsData = []
@@ -39,9 +40,11 @@ fs.readdir(basePath, async function (err, files) {
 
         const image = await Jimp.read(filedir)
 
-        image.resize({ w: 160 }).getBuffer('image/jpeg', { quality: 80 }) // resize
+        const resized = await image.resize({ w: 640 }).getBuffer('image/jpeg', { quality: 80 }) // resize
 
-        await image.write(path.resolve(`view/public/thumb-${filename}`)) // save
+        const resizedImage = await Jimp.fromBuffer(resized)
+
+        await resizedImage.write(path.resolve(`view/public/thumb-${filename}`)) // save
       } catch (error) {
         console.log(error)
       }

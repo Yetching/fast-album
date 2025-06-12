@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "pre": "pnpm install && cd view && pnpm install",
-    "build": "node --max-old-space-size=8192 index.js && cd view && npm run build && cd ..",
+    "build": "sh cl && node --max-old-space-size=8192 index.js && cd view && npm run build && cd ..",
     "deploy": "git add . && git commit -m 'build' && git push origin main",
     "start": "npm run build && npm run deploy"
   },
