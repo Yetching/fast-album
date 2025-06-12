@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "pre": "pnpm install && cd view && pnpm install",
-    "build": "node index.js && cd view && npm run build && cd ..",
+    "build": "node --max-old-space-size=8192 index.js && cd view && npm run build && cd ..",
     "deploy": "git add . && git commit -m 'build' && git push origin main",
     "start": "npm run build && npm run deploy"
   },
@@ -25,6 +25,8 @@
     "dayjs": "^1.11.6",
     "exif": "^0.6.0",
     "image-size": "^1.0.2",
-    "images": "3.2.4"
+    "images": "3.2.4",
+    "jimp": "^1.6.0",
+    "sharp": "^0.34.2"
   }
 }

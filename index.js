@@ -3,7 +3,7 @@
  * @Date: 2022-11-11 21:11:42
  * @Description:
  * @LastEditors: yeenjian
- * @LastEditTime: 2025-06-10 15:21:13
+ * @LastEditTime: 2025-06-12 09:35:43
  * @site: book.palxp.com
  */
 const fs = require('fs')
@@ -13,6 +13,8 @@ const ExifImage = require('exif').ExifImage
 const images = require('images') // 版本锁定3.2.3
 const dayjs = require('dayjs')
 const ColorThief = require('colorthief')
+
+const { Jimp } = require('jimp')
 
 const basePath = path.resolve('resources')
 const jsonPath = path.resolve('view/src/assets/data/datalist.json')
@@ -34,10 +36,12 @@ fs.readdir(basePath, async function (err, files) {
         // 复制图片
         // images(filedir).save(path.resolve(`view/public/${filename}`))
         // 生成压缩图
-        images(filedir)
-          .setLimit(1000000, 1000000)
-          .size(thumbSize)
-          .save(path.resolve(`view/public/thumb-${filename}`), { quality: 30 })
+
+        const image = await Jimp.read(filedir)
+
+        image.resize({ w: 160 }).getBuffer('image/jpeg', { quality: 80 }) // resize
+
+        await image.write(path.resolve(`view/public/thumb-${filename}`)) // save
       } catch (error) {
         console.log(error)
       }
